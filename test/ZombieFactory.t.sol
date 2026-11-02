@@ -5,18 +5,14 @@ import {Test} from "forge-std/Test.sol";
 import {ZombieFactory} from "../src/ZombieFactory.sol";
 
 contract ZombieFactoryTest is Test {
-
     ZombieFactory factory;
 
     address alice = address(0xA11CE);
     address bob = address(0xB0B);
 
-
     function setUp() public {
         factory = new ZombieFactory();
     }
-
-
 
     // тут все фунции для тестирования должны начинаться с префикса test
     function testCreateZombieSuccess() public {
@@ -33,9 +29,8 @@ contract ZombieFactoryTest is Test {
         (string memory name, uint256 dna, uint256 createdAt) = factory.getZombie(id); // структура
         assertEq(name, "Alice");
         assertLt(dna, 10 ** 16); // ДНК меньше должен быть чем 10 ** 16
-        assertEq(createdAt, block.timestamp); 
+        assertEq(createdAt, block.timestamp);
     }
-
 
     function testTwoDifferentOwners() public {
         vm.prank(alice);
@@ -51,14 +46,11 @@ contract ZombieFactoryTest is Test {
         assertEq(factory.zombieToOwner(id2), bob);
     }
 
-
-
     function testEmptyNameReverts() public {
         vm.prank(alice);
-        vm.expectRevert("Empty name"); // проверка что исключение будет 
+        vm.expectRevert("Empty name"); // проверка что исключение будет
         factory.createZombie("");
     }
-
 
     function testAlreadyHasZombieReverts() public {
         vm.prank(alice);
@@ -69,15 +61,12 @@ contract ZombieFactoryTest is Test {
         factory.createZombie("Another");
     }
 
-
     function testDnaLessThanModulus() public {
         vm.prank(alice);
         uint256 id = factory.createZombie("Alice");
 
-
-        (, uint256 dna, ) = factory.getZombie(id); // ДНК меньше должен быть чем 10 ** 16
+        (, uint256 dna,) = factory.getZombie(id); // ДНК меньше должен быть чем 10 ** 16
         assertLt(dna, 10 ** 16);
     }
 }
-
 
